@@ -1,32 +1,3 @@
-class Players {
-  constructor({ name, grade }) {
-    this.name = name;
-    this.grade = grade;
-    this.elo = 600;
-    this.wins = 0;
-    this.lose = 0;
-    this.draw = 0;
-    this.games = 0;
-    this.opponents = []
-  }
-
-  update(elo, result) {
-    this.elo = elo;
-    this.games += 1;
-    switch (result) {
-      case 1:
-        this.wins += 1;
-        break;
-      case 0:
-        this.lose += 1;
-        break;
-      case 0.5:
-        this.draw += 1;
-        break;
-    }
-  }
-}
-
 // Elo Calculation
 function new_elo(result, playerA, playerB) {
   // Getting experience
@@ -53,5 +24,21 @@ function Experience(player) {
     return K2;
   } else if (player.elo <= K3_ELO) {
     return K3;
+  }
+}
+
+function update_elo(result) {
+  elo = elo;
+  games += 1;
+  switch (result) {
+    case 1:
+      wins += 1;
+      break;
+    case 0:
+      lose += 1;
+      break;
+    case 0.5:
+      draw += 1;
+      break;
   }
 }

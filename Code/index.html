@@ -6,19 +6,29 @@
     <title>Chess Game Record</title>
 </head>
 <header>
+    <nav>
+        <input type="button" name="nav-screen" value="Home" id="home">
+        <input type="button" name="nav-screen"  value="Add Player" id="add-player">
+        <input type="button" name="nav-screen" value="Add Game" id="add-game">
+    </nav>
     <form id="sorting-container">
-        <nav>
+        <div>
             <input type="radio" name="sorting" id="name-sort"><label for="sorting">Name</label><br>
             <input type="radio" name="sorting" id="elo-sort"><label for="sorting">Elo</label><br>
             <input type="radio" name="sorting" id="game-amnt-sort"><label for="sorting">Game Amount</label><br>
             <input type="radio" name="sorting" id="wins-amnt-sort"><label for="sorting">Wins</label><br>
             <input type="radio" name="sorting" id="lose-amnt-sort"><label for="sorting">Lose</label>
-        </nav>
+        </div>
     </form>
 </header>
 <body>
     <section id="game-input-container">
-
+        <div>
+            <h2>Add Game</h2>
+            <label for="playerA">Winner</label>
+            <input type="text" name="playerA"> <br>
+            <label for="playerB"></label>
+        </div>
     </section>
     <section id="profile-container">
 

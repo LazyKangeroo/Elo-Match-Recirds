@@ -4,20 +4,10 @@ from handle import *
 # Handle modules
 new = New()
 sort = Sort()
-
-count = 0
+screens = Screens()
 
 #main window
 win = Tk()
-
-# Show Hide
-def show_hide(widget1,widget2,widget3,widget4):
-    widget1.pack()
-    widget2.pack_forget()
-    widget3.pack_forget()
-    widget4.pack_forget()
-    global count
-    count += 1
 
 # details
 win.title('Chess Team Rankings')
@@ -59,9 +49,10 @@ lblGrade = Label(innerFrame_new_grade,font=('Arial',13),text='Grade',padx=12)
     # Textbox
 entryName = Entry(innerFrame_new_name,font=('Arial',13),width=20)
 entrySurname = Entry(innerFrame_new_surname,font=('Arial',13),width=20)
-entryGrade = Entry(innerFrame_new_grade,font=('Arial',13),width=20)
+entryGrade = Entry(innerFrame_new_grade,font=('Arial',13),width=10)
     # btn
-btnSubmitNewPlayer = Button(frame_newplayer,font=('Arial',15,'bold'),text='Submit',activebackground='#111d2e',activeforeground='#5b8fd9', bg='#5b8fd9', fg='#111d2e', command=lambda : new.player(entryName.get(),entrySurname.get(),entryGrade.get()))
+newPlayer_Enteries = [entryName,entrySurname,entryGrade]
+btnSubmitNewPlayer = Button(frame_newplayer,font=('Arial',15,'bold'),text='Submit',activebackground='#111d2e',activeforeground='#5b8fd9', bg='#5b8fd9', fg='#111d2e', command=lambda : new.player(entryName.get(),entrySurname.get(),entryGrade.get(),newPlayer_Enteries))
     # Display
 lblName.pack(side=LEFT)
 lblSurname.pack(side=LEFT)
@@ -93,13 +84,13 @@ sortMenu.add_command(label='Draws')
 # actions
 viewMenu = Menu(menubar,tearoff=0,font=('Arial',10))
 menubar.add_cascade(label='View',menu=viewMenu)
-viewMenu.add_command(label='New Player',command=lambda : show_hide(frame_newplayer,frame_newgame,frame_home,frame_profile))
-viewMenu.add_command(label='New Game',command=lambda : show_hide(frame_newgame,frame_newplayer,frame_home,frame_profile))
+viewMenu.add_command(label='New Player',command=lambda : screens.show_hide(frame_newplayer,frame_newgame,frame_home,frame_profile))
+viewMenu.add_command(label='New Game',command=lambda : screens.show_hide(frame_newgame,frame_newplayer,frame_home,frame_profile))
 viewMenu.add_separator()
-viewMenu.add_command(label='Home',command=lambda : show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile))
+viewMenu.add_command(label='Home',command=lambda : screens.show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile))
 
-if count < 1:
-    show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile)
+if screens.count < 1:
+    screens.show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile)
 
 # run main win
 win.mainloop()

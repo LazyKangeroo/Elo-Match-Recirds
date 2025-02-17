@@ -61,7 +61,8 @@ entryPlayerB_surname = Entry(innerFrame_playerB_surname,font=('Arial',13),width=
 
 entryResult = Entry(innerFrame_game_result,font=('Arial',13),width=10)
     # btn
-btnSubmitNewPlayer = Button(frame_newgame,font=('Arial',15,'bold'),text='Submit',activebackground='#111d2e',activeforeground='#5b8fd9', bg='#5b8fd9', fg='#111d2e', command=lambda : new.game(entryPlayerA_name.get(),entryPlayerA_surname.get(),entryPlayerB_name.get(),entryPlayerB_surname.get(),entryResult.get()))
+newGame_Enteries = [entryPlayerA_name,entryPlayerA_surname,entryPlayerB_name,entryPlayerB_surname,entryResult]
+btnSubmitNewPlayer = Button(frame_newgame,font=('Arial',15,'bold'),text='Submit',activebackground='#111d2e',activeforeground='#5b8fd9', bg='#5b8fd9', fg='#111d2e', command=lambda : new.game(newGame_Enteries))
     # Display
 lblPlayerA_Head.pack(side=TOP)
 lblPlayerA_name.pack(side=LEFT)
@@ -102,8 +103,8 @@ entryName = Entry(innerFrame_new_name,font=('Arial',13),width=20)
 entrySurname = Entry(innerFrame_new_surname,font=('Arial',13),width=20)
 entryGrade = Entry(innerFrame_new_grade,font=('Arial',13),width=10)
     # btn
-newPlayer_Enteries = [entryName,entrySurname,entryGrade]
-btnSubmitNewPlayer = Button(frame_newplayer,font=('Arial',15,'bold'),text='Submit',activebackground='#111d2e',activeforeground='#5b8fd9', bg='#5b8fd9', fg='#111d2e', command=lambda : new.player(entryName.get(),entrySurname.get(),entryGrade.get(),newPlayer_Enteries))
+newPlayer_Enteries = [entryName, entrySurname,entryGrade]
+btnSubmitNewPlayer = Button(frame_newplayer,font=('Arial',15,'bold'),text='Submit',activebackground='#111d2e',activeforeground='#5b8fd9', bg='#5b8fd9', fg='#111d2e', command=lambda : new.player(newPlayer_Enteries))
     # Display
 lblName.pack(side=LEFT)
 lblSurname.pack(side=LEFT)

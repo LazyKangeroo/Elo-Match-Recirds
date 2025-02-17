@@ -1,2 +1,29 @@
 [
+    {
+        "name": "FRANCOIS",
+        "surname": "VAN TONDER",
+        "grade": 11,
+        "games": {
+            "wins": 0,
+            "loses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": [
+            ]
+        }
+    },
+    {
+        "name": "CAYLEM",
+        "surname": "ROOS",
+        "grade": 11,
+        "games": {
+            "wins": 0,
+            "loses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": [
+
+            ]
+        }
+    }
 ]

@@ -7,16 +7,16 @@ class New:
         self.mess = Messages()
         self.screen = Screens()
 
-    def player(self, name, surname, grade, enteries):
+    def player(self, enteries):
         # Validation
-        if name == '' or surname == '' or grade == '':
+        if enteries["name"].get() == '' or enteries["surname"].get() == '' or enteries["grade"].get() == '':
             self.mess.ValidationInfoOmitted()
             return
         if self.mess.Submit() == False:
             return
-        if self.mess.intValidation(grade) == False:
+        if self.mess.intValidation(enteries["grade"].get()) == False:
             return
-        if self.mess.grRandgeValidation(grade) == False:
+        if self.mess.grRandgeValidation(enteries["grade"].get()) == False:
             return
 
         try:
@@ -27,12 +27,16 @@ class New:
 
         # Append new data
         player = {
-            "name" : name.upper(),
-            "surname" : surname.upper(),
-            "grade" : int(grade),
-            "amnt-games" : 0,
-            "game-results" : [],
-            "opponets" : []
+            "name" : enteries["name"].get().upper(),
+            "surname" : enteries["surname"].get().upper(),
+            "grade" : int(enteries["grade"].get()),
+            "games" : {
+                "wins" : 0,
+                "loses" : 0,
+                "draws" : 0,
+                "amnt" : 0,
+                "results" : []
+                }
         }
         if self.mess.doubleEntery(data,player):
         # Write updated data back to the file
@@ -41,6 +45,12 @@ class New:
                 json.dump(data, file, indent=4)
 
         self.screen.clearEnterys(enteries)
+
+    def game(self,playerA_name,playerA_surname,playerB_name,playerB_surnameresult,result):
+        # add playerA as opponet for playerB vice versa
+        # add game result by both
+        # get new elo for both
+        return
 
 class Sort:
     def __init__(self):

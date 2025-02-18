@@ -2,13 +2,16 @@
     {
         "name": "FRANCOIS",
         "surname": "VAN TONDER",
-        "grade": 11,
+        "grade": 10,
+        "elo": 500,
         "games": {
-            "wins": 0,
-            "loses": 0,
+            "wins": 1,
+            "losses": 0,
             "draws": 0,
-            "amnt": 0,
+            "amnt": 1,
             "results": [
+                [
+                ]
             ]
         }
     },
@@ -16,13 +19,15 @@
         "name": "CAYLEM",
         "surname": "ROOS",
         "grade": 11,
+        "elo": 500,
         "games": {
             "wins": 0,
-            "loses": 0,
+            "losses": 1,
             "draws": 0,
-            "amnt": 0,
+            "amnt": 1,
             "results": [
-
+                [
+                ]
             ]
         }
     }

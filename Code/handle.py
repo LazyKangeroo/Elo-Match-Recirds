@@ -2,10 +2,14 @@ import json
 from tkinter import *
 from tkinter import messagebox
 
+from elo import Elo
+from validation import Validation
+
 class New:
     def __init__(self):
         self.val = Validation()
         self.screen = Screens()
+        self.elo = Elo()
 
     def player(self, enteries):
         # Validation
@@ -27,9 +31,10 @@ class New:
             "name" : enteries[0].get().upper(),
             "surname" : enteries[1].get().upper(),
             "grade" : int(enteries[2].get()),
+            "elo" : 500,
             "games" : {
                 "wins" : 0,
-                "loses" : 0,
+                "losses" : 0,
                 "draws" : 0,
                 "amnt" : 0,
                 "results" : []
@@ -80,22 +85,32 @@ class New:
         }
         # checking if Player exists
         if self.val.nonExistingPlayer(self.getDataToRead(),players_details["playerA"]):
-            print(type(players_details["playerA"]))
-            print(players_details["playerA"])
-
+            return
         if self.val.nonExistingPlayer(self.getDataToRead(),players_details["playerB"]):
-            print(type(players_details["playerB"]))
-            print(players_details["playerB"])
+            return
+
+        # get new elo for both
+        self.sortPlayersForNewElo(players_details["playerA"],players_details['playerB'])
 
         # Adding results to opponets records
         data = self.updateGamesRecords(players_details["playerA"],players_details["playerB"],self.getDataToRead())
 
         with open("data.json", "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4)
-
-        # get new elo for both
-
         self.screen.clearEnterys(enteries)
+        messagebox.showinfo(title='Successful!',message='Game Successfully Added')
+
+    def sortPlayersForNewElo(self,playerA,playerB):
+        data = self.getDataToRead()
+        for item in data:
+            if item['name'] == playerA["name"] and item['surname'] == playerA["surname"]:
+                A = item
+        for item in data:
+            if item['name'] == playerB['name'] and item['surname'] == playerB['surname']:
+                B = item
+        self.elo.getNewElo(playerA['result'],A,B)
+        self.elo.getNewElo(playerB['result'],B,A)
+        return
 
     def getDataToRead(self):
         try:
@@ -124,12 +139,12 @@ class New:
         return data
 
     def getRecordsToUpdate(self,result):
-        if result == '1':
+        if result == 1:
             return "wins"
-        if result == '0':
-            return "loses"
-        if result == '0.5' or result == '0,5' or  result == '1/2':
-            return "draw"
+        if result == 0:
+            return "losses"
+        if result == 0.5:
+            return "draws"
 
 class Sort:
     def __init__(self):
@@ -149,50 +164,9 @@ class Screens:
         widget3.pack_forget()
         widget4.pack_forget()
         self.count += 1
+        return
 
     def clearEnterys(self,enteries):
         for item in enteries:
             item.delete(0,END)
         return
-
-class Validation:
-    def __init__(self):
-        pass
-
-    def ValidationInfoOmitted(self):
-        messagebox.showerror(title='Values Ommitted', message='You have left out values which need to be entered for action to take place. Please input ALL values')
-
-    def Submit(self):
-        return messagebox.askyesno(title='Submit Values?', message='By clicking YES you are confirming that all entered values are correct and that you want to continue.')
-
-    def intValidation(self,value):
-        try:
-            num = int(value)
-        except:
-            messagebox.showwarning('Invalid Value Entered', 'You can only enter NUMBERS not any letters,symbols,empty space')
-            return False
-        return True
-
-    def grRandgeValidation(self,grade):
-        if int(grade) > 12 or int(grade) < 8:
-            messagebox.showwarning('Invalid Range', 'You can only enter Grade values from 8 to 12 (Highschool Levels)')
-            return False
-        return True
-
-    def doubleEntery(self, data,player):
-        for item in data:
-            if item['name'] == player['name'] and item['surname'] == player['surname'] and item['grade'] == player['grade']:
-                return messagebox.askyesno('Player Already Exists', 'The person you have entered already exists on the system. Do you want to overwrite the previous instince of this person.\nNOTE: Doing this will reset all this person past records and details.')
-        return True
-
-    def nonExistingPlayer(self, data, player):
-        found = False
-        for item in data:
-            if item['name'] == player['name'] and item['surname'] == player['surname']:
-                found = True
-                messagebox.showinfo(title='Successful!',message='Game Successfully Added')
-
-        if not found:
-            messagebox.showerror(title='Non-Existing Player',message=f'Player entered ({player["name"]} {player["surname"]}) doesn`t exist in database.\nPossible reason could be that the name/surname was entered incorrectly OR you added unneeded space when typing the name/surname.\nOTHERWISE you will need to create a NEW PLAYER to continue')
-            return True
-        return False

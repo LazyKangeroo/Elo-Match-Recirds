@@ -1,44 +1,25 @@
-# // Elo Calculation
-# function new_elo(result, playerA, playerB) {
-#   // Getting experience
-#   const K = Experience(playerA);
+from const import *
 
-#   // Getting expected result
-#   const E = ExpectedResult(playerA, playerB);
+class Elo:
+    def __init__(self):
+        pass
 
-#   // New Elo cal
-#   const New_Elo = playerA.elo + K * (result - E);
-#   return New_Elo;
-# }
+    def getNewElo(self,result,playerA,playerB):
+        # gets player experience
+        K = self.experience(playerA)
+        E = self.expectedResult(playerA,playerB)
 
-# function ExpectedResult(playerA, playerB) {
-#   const Q_A = 10 ** (playerA.elo / 400);
-#   const Q_B = 10 ** (playerB.elo / 400);
-#   return Q_A / (Q_A + Q_B);
-# }
+        return playerA["elo"] + K * (result - E)
 
-# function Experience(player) {
-#   if (player.games <= MIN_GAMES) {
-#     return K1;
-#   } else if (player.elo >= K2_ELO && player.elo <= K3_ELO) {
-#     return K2;
-#   } else if (player.elo <= K3_ELO) {
-#     return K3;
-#   }
-# }
+    def expectedResult(self,playerA,playerB):
+        Q_A = 10 ** (playerA["elo"] / 400)
+        Q_B = 10 ** (playerB["elo"] / 400)
+        return Q_A / (Q_A + Q_B)
 
-# function update_elo(result) {
-#   elo = elo;
-#   games += 1;
-#   switch (result) {
-#     case 1:
-#       wins += 1;
-#       break;
-#     case 0:
-#       lose += 1;
-#       break;
-#     case 0.5:
-#       draw += 1;
-#       break;
-#   }
-# }
+    def experience(self,player):
+        if player["games"]["amnt"] <= MIN_GAMES:
+            return K1
+        elif player["elo"] >= K2_ELO and player["elo"] <= K3_ELO:
+            return K2
+        elif player["elo"] <= K3_ELO:
+            return K3

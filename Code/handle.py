@@ -90,10 +90,11 @@ class New:
             return
 
         # get new elo for both
-        self.sortPlayersForNewElo(players_details["playerA"],players_details['playerB'])
+        A_elo = self.sortPlayersForNewElo(players_details["playerA"],players_details['playerB'])
+        B_elo = self.sortPlayersForNewElo(players_details["playerB"],players_details['playerA'])
 
-        # Adding results to opponets records
-        data = self.updateGamesRecords(players_details["playerA"],players_details["playerB"],self.getDataToRead())
+        # Adding results to records
+        data = self.updateGamesRecords(players_details["playerA"],A_elo,players_details["playerB"],B_elo,self.getDataToRead())
 
         with open("data.json", "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4)
@@ -108,9 +109,7 @@ class New:
         for item in data:
             if item['name'] == playerB['name'] and item['surname'] == playerB['surname']:
                 B = item
-        self.elo.getNewElo(playerA['result'],A,B)
-        self.elo.getNewElo(playerB['result'],B,A)
-        return
+        return self.elo.getNewElo(playerA['result'],A,B)
 
     def getDataToRead(self):
         try:
@@ -120,7 +119,7 @@ class New:
             data = []  # Create a new list if file doesn't exist
         return data
 
-    def updateGamesRecords(self,playerA,playerB,data):
+    def updateGamesRecords(self,playerA,A_elo,playerB,B_elo,data):
         for player in data:
             # Getting Player A
             if player["name"] == playerA["name"] and player["surname"] and playerA["surname"]:
@@ -129,6 +128,8 @@ class New:
                 # update total game records
                 player["games"][self.getRecordsToUpdate(playerA["result"])] += 1
                 player["games"]["amnt"] += 1
+                # update elo
+                player["elo"] = A_elo
             # Getting Player B
             if player["name"] == playerB["name"] and player["surname"] and playerB["surname"]:
                 # appending opponents to records
@@ -136,6 +137,8 @@ class New:
                 # update total game records
                 player["games"][self.getRecordsToUpdate(playerB["result"])] += 1
                 player["games"]["amnt"] += 1
+                # Adding elo
+                player["elo"] = B_elo
         return data
 
     def getRecordsToUpdate(self,result):

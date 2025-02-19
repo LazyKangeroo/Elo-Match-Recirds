@@ -1,9 +1,33 @@
 from tkinter import *
 from handle import *
 
+# Functions for sorting
+def compile(type,dect):
+    players = new.getDataToRead()
+    if dect != 0:
+        players.sort(key=lambda player: player[dect][type], reverse=True)
+    else:
+        players.sort(key=lambda player: player[type], reverse=True)
+    display(players)
+    # self.display
+
+def display(sorted_data):
+    for row_num,player in enumerate(sorted_data):
+        col = 0
+        for info in player:
+            if info == "games":
+                w = 10
+                for item in player[info]:
+                    if item == "result":
+                        continue
+                    Label(frame_grid,font=('Arial',10),text=player[info][item],padx=10,pady=10,anchor='center',width=5).grid(row=row_num,column=col, sticky="ew")
+                    col += 1
+            else:
+                Label(frame_grid,font=('Arial',10),text=player[info],padx=30,pady=10,anchor='center').grid(row=row_num,column=col, sticky="ew")
+                col += 1
+
 # Handle modules
 new = New()
-sort = Sort()
 screens = Screens()
 
 #main window
@@ -11,7 +35,8 @@ win = Tk()
 
 # details
 win.title('Chess Team Rankings')
-win.geometry('950x700')
+win.geometry('1150x700')
+win.grid_columnconfigure(0, weight=1)
 
 icon = PhotoImage(file='./icons/chess-board.png')
 win.iconphoto(True,icon)
@@ -24,6 +49,31 @@ lblHead = Label(frame_head,text='Chess Game Records',font=('Arial',20,'bold'),fg
 ## Home frame ##
 frame_home = Frame(win)
 frame_home.pack()
+
+frame_grid_lbl = Frame(frame_home)
+frame_grid_lbl.pack()
+frame_grid = Frame(frame_home)
+frame_grid.pack()
+
+    # lbl
+lblPlayer_names = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Name',padx=20,pady=10,anchor='center',fg='#a65505',width=20)
+lblPlayer_surnames = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Surname',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_grade = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Grade',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_elo = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='ELO',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_wins = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Wins',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_losses = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Losses',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_draws = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Draws',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_games = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Game Amount',padx=20,pady=10,anchor='center',fg='#a65505')
+
+    # display
+lblPlayer_names.grid(row=0,column=0, sticky="ew")
+lblPlayer_surnames.grid(row=0,column=1, sticky="ew")
+lblPlayer_grade.grid(row=0,column=2, sticky="ew")
+lblPlayer_elo.grid(row=0,column=3, sticky="ew")
+lblPlayer_wins.grid(row=0,column=4, sticky="ew")
+lblPlayer_losses.grid(row=0,column=5, sticky="ew")
+lblPlayer_draws.grid(row=0,column=6, sticky="ew")
+lblPlayer_games.grid(row=0,column=7, sticky="ew")
 
 ## New Game frame ##
 frame_newgame = Frame(win)
@@ -127,13 +177,13 @@ win.config(menu=menubar)
 # sort players by
 sortMenu = Menu(menubar,tearoff=0, font=('Arial',10))
 menubar.add_cascade(label='Sort',menu=sortMenu)
-sortMenu.add_command(label='Name')
-sortMenu.add_command(label='Grade')
-sortMenu.add_command(label='Elo')
+sortMenu.add_command(label='Grade',command=lambda : compile('grade',0))
+sortMenu.add_command(label='Elo', command=lambda : compile('elo',0))
 sortMenu.add_separator()
-sortMenu.add_command(label='Wins')
-sortMenu.add_command(label='Lost')
-sortMenu.add_command(label='Draws')
+sortMenu.add_command(label='Wins',command=lambda : compile('wins','games'))
+sortMenu.add_command(label='Lost',command=lambda : compile('losses','games'))
+sortMenu.add_command(label='Draws',command=lambda : compile('draws','games'))
+sortMenu.add_command(label="Games' Amount",command=lambda : compile('amnt','games'))
 
 # actions
 viewMenu = Menu(menubar,tearoff=0,font=('Arial',10))

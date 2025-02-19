@@ -1,2 +1,67 @@
 [
+    {
+        "name": "FRANCOIS",
+        "surname": "VAN TONDER",
+        "grade": 11,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        }
+    },
+    {
+        "name": "CAYLEM",
+        "surname": "R",
+        "grade": 10,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        }
+    },
+    {
+        "name": "KYLE",
+        "surname": "BRINK",
+        "grade": 9,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        }
+    },
+    {
+        "name": "NEWMAN",
+        "surname": "MENN",
+        "grade": 8,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        }
+    },
+    {
+        "name": "PERSON",
+        "surname": "A",
+        "grade": 12,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        }
+    }
 ]

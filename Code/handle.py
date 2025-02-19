@@ -149,10 +149,6 @@ class New:
         if result == 0.5:
             return "draws"
 
-class Sort:
-    def __init__(self):
-        pass
-
 class Screens:
     def __init__(self):
         self.count = 0

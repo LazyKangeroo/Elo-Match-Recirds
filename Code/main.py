@@ -1,7 +1,14 @@
 from tkinter import *
 from handle import *
 
-# Functions for sorting
+# Handle modules
+new = New()
+prf = Profile()
+screens = Screens()
+
+#########################################################################################################################################################################
+
+## Functions for sorting ##
 def compile(type,dect):
     players = new.getDataToRead()
     if dect != 0:
@@ -9,28 +16,32 @@ def compile(type,dect):
     else:
         players.sort(key=lambda player: player[type], reverse=True)
     display(players)
-    # self.display
 
 def display(sorted_data):
+    frames = [frame_profile,frame_home,frame_newgame,frame_newplayer]
     for row_num,player in enumerate(sorted_data):
         col = 0
         for info in player:
+            name = player["name"]
+            surname = player["surname"]
+            grade = player["grade"]
             if info == "games":
-                w = 10
                 for item in player[info]:
                     if item == "result":
                         continue
-                    Label(frame_grid,font=('Arial',10),text=player[info][item],padx=10,pady=10,anchor='center',width=5).grid(row=row_num,column=col, sticky="ew")
+                    lbl = Label(frame_grid,cursor= "hand2",font=('Arial',11),text=player[info][item],padx=10,pady=5,anchor='center',width=5)
+                    lbl.grid(row=row_num + 1,column=col, sticky="ew")
+                    lbl.bind("<Button-1>", lambda event,name=name,surname=surname,grade=grade,frames=frames: prf.lblClicked(event,name,surname,grade,frames))
                     col += 1
             else:
-                Label(frame_grid,font=('Arial',10),text=player[info],padx=30,pady=10,anchor='center').grid(row=row_num,column=col, sticky="ew")
+                lbl = Label(frame_grid,cursor= "hand2",font=('Arial',11),text=player[info],padx=30,pady=5,anchor='center')
+                lbl.grid(row=row_num + 1,column=col, sticky="ew")
+                lbl.bind("<Button-1>", lambda event,name=name,surname=surname,grade=grade,frames=frames: prf.lblClicked(event,name,surname,grade,frames))
                 col += 1
 
-# Handle modules
-new = New()
-screens = Screens()
+#########################################################################################################################################################################
 
-#main window
+###     MAIN WINDOW     ###
 win = Tk()
 
 # details
@@ -41,8 +52,8 @@ win.grid_columnconfigure(0, weight=1)
 icon = PhotoImage(file='./icons/chess-board.png')
 win.iconphoto(True,icon)
 
-# all widgets will be here
-# Head frame
+
+## Head frame ##
 frame_head = Frame(win).pack(side=TOP)
 lblHead = Label(frame_head,text='Chess Game Records',font=('Arial',20,'bold'),fg='#5c5fff').pack()
 
@@ -50,20 +61,18 @@ lblHead = Label(frame_head,text='Chess Game Records',font=('Arial',20,'bold'),fg
 frame_home = Frame(win)
 frame_home.pack()
 
-frame_grid_lbl = Frame(frame_home)
-frame_grid_lbl.pack()
 frame_grid = Frame(frame_home)
 frame_grid.pack()
 
     # lbl
-lblPlayer_names = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Name',padx=20,pady=10,anchor='center',fg='#a65505',width=20)
-lblPlayer_surnames = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Surname',padx=20,pady=10,anchor='center',fg='#a65505')
-lblPlayer_grade = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Grade',padx=20,pady=10,anchor='center',fg='#a65505')
-lblPlayer_elo = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='ELO',padx=20,pady=10,anchor='center',fg='#a65505')
-lblPlayer_wins = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Wins',padx=20,pady=10,anchor='center',fg='#a65505')
-lblPlayer_losses = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Losses',padx=20,pady=10,anchor='center',fg='#a65505')
-lblPlayer_draws = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Draws',padx=20,pady=10,anchor='center',fg='#a65505')
-lblPlayer_games = Label(frame_grid_lbl,font=('Arial',10,'underline'),text='Game Amount',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_names = Label(frame_grid,font=('Arial',13,'underline'),text='Name',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_surnames = Label(frame_grid,font=('Arial',13,'underline'),text='Surname',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_grade = Label(frame_grid,font=('Arial',13,'underline'),text='Grade',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_elo = Label(frame_grid,font=('Arial',13,'underline'),text='ELO',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_wins = Label(frame_grid,font=('Arial',13,'underline'),text='Wins',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_losses = Label(frame_grid,font=('Arial',13,'underline'),text='Losses',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_draws = Label(frame_grid,font=('Arial',13,'underline'),text='Draws',padx=20,pady=10,anchor='center',fg='#a65505')
+lblPlayer_games = Label(frame_grid,font=('Arial',13,'underline'),text='Game Amount',padx=20,pady=10,anchor='center',fg='#a65505')
 
     # display
 lblPlayer_names.grid(row=0,column=0, sticky="ew")
@@ -166,15 +175,15 @@ entryGrade.pack(side=RIGHT)
 
 btnSubmitNewPlayer.pack(side=BOTTOM)
 
-# Player pf frame
+## Player Profile frame ##
 frame_profile = Frame(win)
 frame_profile.pack()
 
-# menu
+## Menu ##
 menubar = Menu(win)
 win.config(menu=menubar)
 
-# sort players by
+    # sort players by
 sortMenu = Menu(menubar,tearoff=0, font=('Arial',10))
 menubar.add_cascade(label='Sort',menu=sortMenu)
 sortMenu.add_command(label='Grade',command=lambda : compile('grade',0))
@@ -185,7 +194,7 @@ sortMenu.add_command(label='Lost',command=lambda : compile('losses','games'))
 sortMenu.add_command(label='Draws',command=lambda : compile('draws','games'))
 sortMenu.add_command(label="Games' Amount",command=lambda : compile('amnt','games'))
 
-# actions
+    # actions
 viewMenu = Menu(menubar,tearoff=0,font=('Arial',10))
 menubar.add_cascade(label='View',menu=viewMenu)
 viewMenu.add_command(label='New Player',command=lambda : screens.show_hide(frame_newplayer,frame_newgame,frame_home,frame_profile))

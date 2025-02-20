@@ -1,4 +1,5 @@
 from const import *
+import math
 
 class Elo:
     def __init__(self):
@@ -9,7 +10,7 @@ class Elo:
         K = self.experience(playerA)
         E = self.expectedResult(playerA,playerB)
 
-        return playerA["elo"] + K * (result - E)
+        return math.trunc(playerA["elo"] + K * (result - E))
 
     def expectedResult(self,playerA,playerB):
         Q_A = 10 ** (playerA["elo"] / 400)

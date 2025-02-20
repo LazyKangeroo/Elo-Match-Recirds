@@ -1,3 +1,4 @@
+# Elo calculation constanta
 WIN = 1
 LOSE = 0
 DRAW = 0.5

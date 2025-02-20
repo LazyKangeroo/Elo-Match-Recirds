@@ -5,6 +5,8 @@ from tkinter import messagebox
 from elo import Elo
 from validation import Validation
 
+#########################################################################################################################################################################
+
 class New:
     def __init__(self):
         self.val = Validation()
@@ -124,7 +126,7 @@ class New:
             # Getting Player A
             if player["name"] == playerA["name"] and player["surname"] and playerA["surname"]:
                 # appending opponents to records
-                player["games"]["results"].append([f"{playerB['name']} {playerB['surname']}",[playerA["result"]]])
+                player["games"]["results"].append([f"{playerB['name']} {playerB['surname']}",B_elo,playerB["result"]])
                 # update total game records
                 player["games"][self.getRecordsToUpdate(playerA["result"])] += 1
                 player["games"]["amnt"] += 1
@@ -133,7 +135,7 @@ class New:
             # Getting Player B
             if player["name"] == playerB["name"] and player["surname"] and playerB["surname"]:
                 # appending opponents to records
-                player["games"]["results"].append([f"{playerA['name']} {playerA['surname']}",[playerB["result"]]])
+                player["games"]["results"].append([f"{playerA['name']} {playerA['surname']}",A_elo,playerB["result"]])
                 # update total game records
                 player["games"][self.getRecordsToUpdate(playerB["result"])] += 1
                 player["games"]["amnt"] += 1
@@ -148,6 +150,8 @@ class New:
             return "losses"
         if result == 0.5:
             return "draws"
+
+#########################################################################################################################################################################
 
 class Screens:
     def __init__(self):
@@ -168,4 +172,39 @@ class Screens:
     def clearEnterys(self,enteries):
         for item in enteries:
             item.delete(0,END)
+        return
+
+#########################################################################################################################################################################
+
+class Profile:
+    def __init__(self):
+        self.val = Validation()
+        self.screen = Screens()
+        self.new = New()
+
+    def lblClicked(self,event,name,surname,grade,frames):
+        #Handles label click and prints the row & column.
+        clicked_label = event.widget  # Get the clicked label
+        self.screen.show_hide(frames[0],frames[1],frames[2],frames[3])
+        self.loadProfile([name,surname,grade],frames[0])
+
+    def loadProfile(self,details,frame):
+        for items in self.new.getDataToRead():
+            if items["name"] == details[0] and items["surname"] == details[1] and items["grade"] == details[2]:
+                player = items
+                break
+        # row 0
+        Label(frame,text=f'{player["name"]} {player["surname"]}',font=('Arial',15,'bold'),width=20,padx=50,pady=20).grid(row=0,column=0,columnspan=2)
+        Label(frame,text=f'Elo: {player["elo"]}',font=('Arial',15,'bold'),width=20,padx=50,pady=20).grid(row=0,column=4,columnspan=2)
+        Label(frame,text=f'Grade: {player["grade"]}',font=('Arial',15,'bold'),width=10,padx=50,pady=20).grid(row=0,column=2,columnspan=1,sticky=NSEW)
+        # row 1
+        Label(frame,text=f'Opponent:',font=('Arial',13,'underline'),pady=20,fg='#a65505').grid(row=1,column=0,columnspan=2,sticky=NW)
+        Label(frame,text=f'Result:',font=('Arial',13,'underline'),pady=20,fg='#a65505').grid(row=1,column=3,columnspan=2,sticky=NE)
+        # the rest
+        for row_num, games in enumerate(player["games"]["results"]):
+            Label(frame,cursor= "hand2",font=('Arial',11),text=games[0],pady=5).grid(row=row_num + 2,column=0, sticky=NW)
+            Label(frame,cursor= "hand2",font=('Arial',11),text=games[1],pady=5).grid(row=row_num + 2,column=2, sticky=EW)
+            Label(frame,cursor= "hand2",font=('Arial',11),text=games[2],pady=5).grid(row=row_num + 2,column=4, sticky=NE)
+
+    def delete(self):
         return

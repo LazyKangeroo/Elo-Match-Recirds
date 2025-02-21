@@ -1,17 +1,19 @@
 import json
 from tkinter import *
 from tkinter import messagebox
+import datetime
 
 from elo import Elo
 from validation import Validation
 
-#########################################################################################################################################################################
+##################################################################################################################
 
 class New:
     def __init__(self):
         self.val = Validation()
         self.screen = Screens()
         self.elo = Elo()
+        self.manage = PlayerDataManagement()
 
     def player(self, enteries):
         # Validation
@@ -26,7 +28,7 @@ class New:
         if self.val.grRandgeValidation(enteries[2].get()) == False:
             return
 
-        data = self.getDataToRead()
+        data = getDataToRead()
 
         # Append new data
         player = {
@@ -40,7 +42,9 @@ class New:
                 "draws" : 0,
                 "amnt" : 0,
                 "results" : []
-                }
+                },
+            "year" : self.manage.getDate(),
+            "target-year" : self.manage.getTargetDate()
         }
         if self.val.doubleEntery(data,player):
         # Write updated data back to the file
@@ -86,9 +90,9 @@ class New:
             }
         }
         # checking if Player exists
-        if self.val.nonExistingPlayer(self.getDataToRead(),players_details["playerA"]):
+        if self.val.nonExistingPlayer(getDataToRead(),players_details["playerA"]):
             return
-        if self.val.nonExistingPlayer(self.getDataToRead(),players_details["playerB"]):
+        if self.val.nonExistingPlayer(getDataToRead(),players_details["playerB"]):
             return
 
         # get new elo for both
@@ -96,14 +100,14 @@ class New:
         B_elo = self.sortPlayersForNewElo(players_details["playerB"],players_details['playerA'])
 
         # Adding results to records
-        data = self.updateGamesRecords(players_details["playerA"],A_elo,players_details["playerB"],B_elo,self.getDataToRead())
+        data = self.updateGamesRecords(players_details["playerA"],A_elo,players_details["playerB"],B_elo,getDataToRead())
 
-        self.writeData(data)
+        writeData(data)
         self.screen.clearEnterys(enteries)
         messagebox.showinfo(title='Successful!',message='Game Successfully Added')
 
     def sortPlayersForNewElo(self,playerA,playerB):
-        data = self.getDataToRead()
+        data = getDataToRead()
         for item in data:
             if item['name'] == playerA["name"] and item['surname'] == playerA["surname"]:
                 A = item
@@ -111,18 +115,6 @@ class New:
             if item['name'] == playerB['name'] and item['surname'] == playerB['surname']:
                 B = item
         return self.elo.getNewElo(playerA['result'],A,B)
-
-    def getDataToRead(self):
-        try:
-            with open("data.json", "r", encoding="utf-8") as file:
-                data = json.load(file)
-        except FileNotFoundError:
-            data = []  # Create a new list if file doesn't exist
-        return data
-
-    def writeData(self,data):
-        with open("data.json", "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
 
     def updateGamesRecords(self,playerA,A_elo,playerB,B_elo,data):
         for player in data:
@@ -154,7 +146,7 @@ class New:
         if result == 0.5:
             return "draws"
 
-#########################################################################################################################################################################
+##################################################################################################################
 
 class Screens:
     def __init__(self):
@@ -182,13 +174,13 @@ class Screens:
             item.delete(0,END)
         return
 
-#########################################################################################################################################################################
+##################################################################################################################
 
 class Profile:
     def __init__(self):
         self.val = Validation()
         self.screen = Screens()
-        self.new = New()
+
 
     def lblClicked(self,event,name,surname,grade,frames):
         #Handles label click and prints the row & column.
@@ -197,7 +189,7 @@ class Profile:
         self.loadProfile([name,surname,grade],frames[0],frames)
 
     def loadProfile(self,details,frame,frames):
-        for items in self.new.getDataToRead():
+        for items in getDataToRead():
             if items["name"] == details[0] and items["surname"] == details[1] and items["grade"] == details[2]:
                 player = items
                 break
@@ -222,18 +214,62 @@ class Profile:
         Button(del_frame, font=('Arial', 15, 'bold'), text='Delete', activebackground='black', activeforeground='red', bg='red', fg='white', command=lambda: self.delete(player,frames)).pack()
 
     def delete(self,player,frames):
-        data = self.new.getDataToRead()
+        data = getDataToRead()
         for index,items in enumerate(data):
             if items["name"] == player["name"] and items["surname"] == player["surname"] and items["grade"] == player["grade"]:
                 data.pop(index)
                 break
-        self.new.writeData(data)
+        writeData(data)
         self.screen.show_hide(frames[1],frames[0],frames[2],frames[3])
 
         for index,widget in enumerate(frames[1].winfo_children()):
             if isinstance(widget, Frame):  # Checks if it's a frame
-                self.screen.delete_widgets(widget,7)
+                self.screen.delete_widgets(widget,8)
         self.screen.delete_widgets(frames[0],0)
 
         messagebox.showinfo(title='Successfully Deleted!',message="You'll have to reselect how to sort players to update list")
         return
+
+##################################################################################################################
+
+class PlayerDataManagement:
+    def __init__(self):
+        self.prf = Profile()
+
+    ## Managing Players Grades ##
+    # WIll be deleted if theyre grade is more that 12
+    def updateGrades(self,frames):
+        data = getDataToRead()
+        now = self.getDate()
+        todelete = []
+        for items in data:
+            if now == items["target-year"]:
+                if items["grade"] + 1 >= 13:
+                    todelete.append(items)
+                else:
+                    items["grade"] += 1
+                    items["target-year"] = self.getTargetDate()
+        writeData(data)
+        for item in todelete:
+            self.prf.delete(item,frames)
+        return
+
+    def getDate(self):
+        return datetime.datetime.now().year
+
+    def getTargetDate(self):
+        return self.getDate() + 1
+
+##################################################################################################################
+
+def getDataToRead():
+    try:
+        with open("data.json", "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = []  # Create a new list if file doesn't exist
+    return data
+
+def writeData(data):
+    with open("data.json", "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)

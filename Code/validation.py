@@ -40,3 +40,10 @@ class Validation:
             messagebox.showerror(title='Non-Existing Player',message=f'Player entered ({player["name"]} {player["surname"]}) doesn`t exist in database.\nPossible reason could be that the name/surname was entered incorrectly OR you added unneeded space when typing the name/surname.\nOTHERWISE you will need to create a NEW PLAYER to continue')
             return True
         return False
+
+    def isData(self,data):
+        if len(data) > 0:
+            return True
+        else:
+            messagebox.showinfo(title='No Player Data',message='There seems to be no Players in the database.')
+            return False

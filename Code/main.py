@@ -1,16 +1,21 @@
 from tkinter import *
 from handle import *
+from validation import Validation
 
 # Handle modules
 new = New()
 prf = Profile()
+manage = PlayerDataManagement()
 screens = Screens()
+val = Validation()
 
-#########################################################################################################################################################################
+##################################################################################################################s
 
 ## Functions for sorting ##
 def compile(type,dect):
-    players = new.getDataToRead()
+    players = getDataToRead()
+    if not val.isData(players):
+        return
     if dect != 0:
         players.sort(key=lambda player: player[dect][type], reverse=True)
     else:
@@ -18,7 +23,6 @@ def compile(type,dect):
     display(players)
 
 def display(sorted_data):
-    frames = [frame_profile,frame_home,frame_newgame,frame_newplayer]
     for row_num,player in enumerate(sorted_data):
         col = 0
         for info in player:
@@ -33,13 +37,15 @@ def display(sorted_data):
                     lbl.grid(row=row_num + 1,column=col, sticky="ew")
                     lbl.bind("<Button-1>", lambda event,name=name,surname=surname,grade=grade,frames=frames: prf.lblClicked(event,name,surname,grade,frames))
                     col += 1
+            elif info == "year" or info == "target-year":
+                break
             else:
                 lbl = Label(frame_grid,cursor= "hand2",font=('Arial',11),text=player[info],padx=30,pady=5,anchor='center')
                 lbl.grid(row=row_num + 1,column=col, sticky="ew")
                 lbl.bind("<Button-1>", lambda event,name=name,surname=surname,grade=grade,frames=frames: prf.lblClicked(event,name,surname,grade,frames))
                 col += 1
 
-#########################################################################################################################################################################
+##################################################################################################################s
 
 ###     MAIN WINDOW     ###
 win = Tk()
@@ -202,8 +208,11 @@ viewMenu.add_command(label='New Game',command=lambda : screens.show_hide(frame_n
 viewMenu.add_separator()
 viewMenu.add_command(label='Home',command=lambda : screens.show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile))
 
+frames = [frame_profile,frame_home,frame_newgame,frame_newplayer]
+
 if screens.count < 1:
     screens.show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile)
+    manage.updateGrades(frames)
 
 # run main win
 win.mainloop()

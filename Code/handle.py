@@ -98,8 +98,7 @@ class New:
         # Adding results to records
         data = self.updateGamesRecords(players_details["playerA"],A_elo,players_details["playerB"],B_elo,self.getDataToRead())
 
-        with open("data.json", "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
+        self.writeData(data)
         self.screen.clearEnterys(enteries)
         messagebox.showinfo(title='Successful!',message='Game Successfully Added')
 
@@ -120,6 +119,10 @@ class New:
         except FileNotFoundError:
             data = []  # Create a new list if file doesn't exist
         return data
+
+    def writeData(self,data):
+        with open("data.json", "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4)
 
     def updateGamesRecords(self,playerA,A_elo,playerB,B_elo,data):
         for player in data:
@@ -169,6 +172,11 @@ class Screens:
         self.count += 1
         return
 
+    def delete_widgets(self,frame, index_skip):
+        for index, widget in enumerate(frame.winfo_children()):
+            if index_skip <= index:
+                widget.destroy()
+
     def clearEnterys(self,enteries):
         for item in enteries:
             item.delete(0,END)
@@ -186,25 +194,46 @@ class Profile:
         #Handles label click and prints the row & column.
         clicked_label = event.widget  # Get the clicked label
         self.screen.show_hide(frames[0],frames[1],frames[2],frames[3])
-        self.loadProfile([name,surname,grade],frames[0])
+        self.loadProfile([name,surname,grade],frames[0],frames)
 
-    def loadProfile(self,details,frame):
+    def loadProfile(self,details,frame,frames):
         for items in self.new.getDataToRead():
             if items["name"] == details[0] and items["surname"] == details[1] and items["grade"] == details[2]:
                 player = items
                 break
+        frame_grid = Frame(frame)
+        frame_grid.pack(side=TOP)
         # row 0
-        Label(frame,text=f'{player["name"]} {player["surname"]}',font=('Arial',15,'bold'),width=20,padx=50,pady=20).grid(row=0,column=0,columnspan=2)
-        Label(frame,text=f'Elo: {player["elo"]}',font=('Arial',15,'bold'),width=20,padx=50,pady=20).grid(row=0,column=4,columnspan=2)
-        Label(frame,text=f'Grade: {player["grade"]}',font=('Arial',15,'bold'),width=10,padx=50,pady=20).grid(row=0,column=2,columnspan=1,sticky=NSEW)
+        Label(frame_grid,text=f'{player["name"]} {player["surname"]}',font=('Arial',15,'bold'),width=20,padx=50,pady=20).grid(row=0,column=0,columnspan=2)
+        Label(frame_grid,text=f'Elo: {player["elo"]}',font=('Arial',15,'bold'),width=20,padx=50,pady=20).grid(row=0,column=4,columnspan=2)
+        Label(frame_grid,text=f'Grade: {player["grade"]}',font=('Arial',15,'bold'),width=10,padx=50,pady=20).grid(row=0,column=2,columnspan=1,sticky=NSEW)
         # row 1
-        Label(frame,text=f'Opponent:',font=('Arial',13,'underline'),pady=20,fg='#a65505').grid(row=1,column=0,columnspan=2,sticky=NW)
-        Label(frame,text=f'Result:',font=('Arial',13,'underline'),pady=20,fg='#a65505').grid(row=1,column=3,columnspan=2,sticky=NE)
+        Label(frame_grid,text=f'Opponent:',font=('Arial',13,'underline'),pady=20,fg='#a65505').grid(row=1,column=0,columnspan=2,sticky=NW)
+        Label(frame_grid,text=f'Result:',font=('Arial',13,'underline'),pady=20,fg='#a65505').grid(row=1,column=3,columnspan=2,sticky=NE)
         # the rest
         for row_num, games in enumerate(player["games"]["results"]):
-            Label(frame,cursor= "hand2",font=('Arial',11),text=games[0],pady=5).grid(row=row_num + 2,column=0, sticky=NW)
-            Label(frame,cursor= "hand2",font=('Arial',11),text=games[1],pady=5).grid(row=row_num + 2,column=2, sticky=EW)
-            Label(frame,cursor= "hand2",font=('Arial',11),text=games[2],pady=5).grid(row=row_num + 2,column=4, sticky=NE)
+            Label(frame_grid,cursor= "hand2",font=('Arial',11),text=games[0],pady=5).grid(row=row_num + 2,column=0, sticky=NW)
+            Label(frame_grid,cursor= "hand2",font=('Arial',11),text=games[1],pady=5).grid(row=row_num + 2,column=2, sticky=EW)
+            Label(frame_grid,cursor= "hand2",font=('Arial',11),text=games[2],pady=5).grid(row=row_num + 2,column=4, sticky=NE)
 
-    def delete(self):
+        # Button del frame
+        del_frame = Frame(frame)
+        del_frame.pack(side=BOTTOM)
+        Button(del_frame, font=('Arial', 15, 'bold'), text='Delete', activebackground='black', activeforeground='red', bg='red', fg='white', command=lambda: self.delete(player,frames)).pack()
+
+    def delete(self,player,frames):
+        data = self.new.getDataToRead()
+        for index,items in enumerate(data):
+            if items["name"] == player["name"] and items["surname"] == player["surname"] and items["grade"] == player["grade"]:
+                data.pop(index)
+                break
+        self.new.writeData(data)
+        self.screen.show_hide(frames[1],frames[0],frames[2],frames[3])
+
+        for index,widget in enumerate(frames[1].winfo_children()):
+            if isinstance(widget, Frame):  # Checks if it's a frame
+                self.screen.delete_widgets(widget,7)
+        self.screen.delete_widgets(frames[0],0)
+
+        messagebox.showinfo(title='Successfully Deleted!',message="You'll have to reselect how to sort players to update list")
         return

@@ -1,2 +1,3 @@
 # Elo-Match-Recirds
- Html page to input chess game records. There will be a JSON-file where all records and relavint info will be sotred. program will create and keep track of player profiles and the relationships between them.
+    Program that can store, manage, add chess players and chess game results for a chess club or team. It will also keep track of the players grades and remove them if they are out of school - players can also be removed manually on their profile.
+    Each player will get a default elo and with each game they play their elo will be changed depending on the result and the other players elo.

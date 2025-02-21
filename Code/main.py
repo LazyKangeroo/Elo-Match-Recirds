@@ -55,7 +55,7 @@ win.title('Chess Team Rankings')
 win.geometry('1150x700')
 win.grid_columnconfigure(0, weight=1)
 
-icon = PhotoImage(file='./icons/chess-board.png')
+icon = PhotoImage(file='chess-board.png')
 win.iconphoto(True,icon)
 
 

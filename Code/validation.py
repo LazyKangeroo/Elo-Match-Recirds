@@ -5,7 +5,7 @@ class Validation:
         pass
 
     def ValidationInfoOmitted(self):
-        messagebox.showerror(title='Values Ommitted', message='You have left out values which need to be entered for action to take place. Please input ALL values')
+        messagebox.showwarning(title='Values Omitted', message='You have left out values which need to be entered for action to take place. Please input ALL values')
 
     def Submit(self):
         return messagebox.askyesno(title='Submit Values?', message='By clicking YES you are confirming that all entered values are correct and that you want to continue.')
@@ -47,3 +47,11 @@ class Validation:
         else:
             messagebox.showinfo(title='No Player Data',message='There seems to be no Players in the database.')
             return False
+
+    def delWarning(self):
+        return messagebox.askyesno(title='Deleting Player',message='Are you sure you want to delte this player?',icon=messagebox.WARNING)
+
+    def formatStrInputs(self,text):
+        text = text.upper()
+        text = text.strip()
+        return text

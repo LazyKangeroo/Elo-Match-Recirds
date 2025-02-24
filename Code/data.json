@@ -1,1 +1,84 @@
-[]
+[
+    {
+        "name": "EXAMPLE1",
+        "surname": "A",
+        "grade": 10,
+        "elo": 496,
+        "games": {
+            "wins": 1,
+            "losses": 1,
+            "draws": 1,
+            "amnt": 3,
+            "results": [
+                [
+                    "EXAMPLE2 B",
+                    480,
+                    0
+                ],
+                [
+                    "EXAMPLE3 C",
+                    501,
+                    0.5
+                ],
+                [
+                    "EXAMPLE4 D",
+                    521,
+                    1
+                ]
+            ]
+        },
+        "year": 2025,
+        "target-year": 2026
+    },
+    {
+        "name": "EXAMPLE2",
+        "surname": "B",
+        "grade": 9,
+        "elo": 480,
+        "games": {
+            "wins": 0,
+            "losses": 1,
+            "draws": 0,
+            "amnt": 1,
+            "results": [
+                [
+                    "EXAMPLE1 A",
+                    520,
+                    0
+                ]
+            ]
+        },
+        "year": 2025,
+        "target-year": 2026
+    },
+    {
+        "name": "EXAMPLE6",
+        "surname": "F",
+        "grade": 12,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        },
+        "year": 2025,
+        "target-year": 2026
+    },
+    {
+        "name": "",
+        "surname": "VAN  ",
+        "grade": 11,
+        "elo": 500,
+        "games": {
+            "wins": 0,
+            "losses": 0,
+            "draws": 0,
+            "amnt": 0,
+            "results": []
+        },
+        "year": 2025,
+        "target-year": 2026
+    }
+]

@@ -32,8 +32,8 @@ class New:
 
         # Append new data
         player = {
-            "name" : enteries[0].get().upper(),
-            "surname" : enteries[1].get().upper(),
+            "name" : self.val.formatStrInputs(enteries[0].get()),
+            "surname" : self.val.formatStrInputs(enteries[1].get()),
             "grade" : int(enteries[2].get()),
             "elo" : 500,
             "games" : {
@@ -79,13 +79,13 @@ class New:
 
         players_details = {
             "playerA" : {
-                "name" : enteries[0].get().upper(),
-                "surname" : enteries[1].get().upper(),
+                "name" : self.val.formatStrInputs(enteries[0].get()),
+                "surname" : self.val.formatStrInputs(enteries[1].get()),
                 "result" : result_A
             },
             "playerB" : {
-                "name" : enteries[2].get().upper(),
-                "surname" : enteries[3].get().upper(),
+                "name" : self.val.formatStrInputs(enteries[2].get()),
+                "surname" : self.val.formatStrInputs(enteries[3].get()),
                 "result" : result_B
             }
         }
@@ -189,6 +189,7 @@ class Profile:
         self.loadProfile([name,surname,grade],frames[0],frames)
 
     def loadProfile(self,details,frame,frames):
+        player = 0
         for items in getDataToRead():
             if items["name"] == details[0] and items["surname"] == details[1] and items["grade"] == details[2]:
                 player = items
@@ -211,9 +212,12 @@ class Profile:
         # Button del frame
         del_frame = Frame(frame)
         del_frame.pack(side=BOTTOM)
-        Button(del_frame, font=('Arial', 15, 'bold'), text='Delete', activebackground='black', activeforeground='red', bg='red', fg='white', command=lambda: self.delete(player,frames)).pack()
+        Button(del_frame, font=('Arial', 15, 'bold'), ipady=25, text='Delete', activebackground='black', activeforeground='red', bg='red', fg='white', command=lambda: self.delete(player,frames)).pack()
 
     def delete(self,player,frames):
+        if not self.val.delWarning():
+            return
+
         data = getDataToRead()
         for index,items in enumerate(data):
             if items["name"] == player["name"] and items["surname"] == player["surname"] and items["grade"] == player["grade"]:
@@ -222,7 +226,7 @@ class Profile:
         writeData(data)
         self.screen.show_hide(frames[1],frames[0],frames[2],frames[3])
 
-        for index,widget in enumerate(frames[1].winfo_children()):
+        for widget in frames[1].winfo_children():
             if isinstance(widget, Frame):  # Checks if it's a frame
                 self.screen.delete_widgets(widget,8)
         self.screen.delete_widgets(frames[0],0)

@@ -31,12 +31,11 @@ def display(sorted_data):
             grade = player["grade"]
             if info == "games":
                 for item in player[info]:
-                    if item == "result":
-                        continue
-                    lbl = Label(frame_grid,cursor= "hand2",font=('Arial',11),text=player[info][item],padx=10,pady=5,anchor='center',width=5)
-                    lbl.grid(row=row_num + 1,column=col, sticky="ew")
-                    lbl.bind("<Button-1>", lambda event,name=name,surname=surname,grade=grade,frames=frames: prf.lblClicked(event,name,surname,grade,frames))
-                    col += 1
+                    if item != "result":
+                        lbl = Label(frame_grid,cursor= "hand2",font=('Arial',11),text=player[info][item],padx=10,pady=5,anchor='center',width=5)
+                        lbl.grid(row=row_num + 1,column=col, sticky="ew")
+                        lbl.bind("<Button-1>", lambda event,name=name,surname=surname,grade=grade,frames=frames: prf.lblClicked(event,name,surname,grade,frames))
+                        col += 1
             elif info == "year" or info == "target-year":
                 break
             else:
@@ -52,7 +51,7 @@ win = Tk()
 
 # details
 win.title('Chess Team Rankings')
-win.geometry('1150x700')
+win.geometry('830x700')
 win.grid_columnconfigure(0, weight=1)
 
 icon = PhotoImage(file='chess-board.png')
@@ -206,7 +205,7 @@ menubar.add_cascade(label='View',menu=viewMenu)
 viewMenu.add_command(label='New Player',command=lambda : screens.show_hide(frame_newplayer,frame_newgame,frame_home,frame_profile))
 viewMenu.add_command(label='New Game',command=lambda : screens.show_hide(frame_newgame,frame_newplayer,frame_home,frame_profile))
 viewMenu.add_separator()
-viewMenu.add_command(label='Home',command=lambda : screens.show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile))
+viewMenu.add_command(label='Home',command=lambda : [screens.show_hide(frame_home,frame_newgame,frame_newplayer,frame_profile),screens.delete_widgets(frame_profile,0)])
 
 frames = [frame_profile,frame_home,frame_newgame,frame_newplayer]
 

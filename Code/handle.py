@@ -212,7 +212,7 @@ class Profile:
         # Button del frame
         del_frame = Frame(frame)
         del_frame.pack(side=BOTTOM)
-        Button(del_frame, font=('Arial', 15, 'bold'), ipady=25, text='Delete', activebackground='black', activeforeground='red', bg='red', fg='white', command=lambda: self.delete(player,frames)).pack()
+        Button(del_frame, font=('Arial', 15, 'bold'), text='Delete', activebackground='black', activeforeground='red', bg='red', fg='white', command=lambda: self.delete(player,frames)).pack()
 
     def delete(self,player,frames):
         if not self.val.delWarning():
